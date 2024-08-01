@@ -11,30 +11,33 @@ function spawnEnemies() {
         let radius = Math.random() * (30 - 8) + 8 // giá trị của radius chạy từ 8 -> 30
         let x
         let y
-
-        if (Math.random() < 0.5) {
-            x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius
+        // tạo các enemy ngẫu nhiên xung quanh màn hình
+        if (Math.random() < 0.5) { // có 50% vào if statement, 50% vào else statement, nếu vào if statement thì enemy sẽ xuất hiện trên Oy, vào else statement thì enemy sẽ xuất hiện trên Õ
+            x = Math.random() < 0.5 ? 0 - radius : canvas.width + radius // nếu kq trả về của Math.random() < 0.5 thì Xenemy = - radius, nếu > 0.5 thì Xenemy = canvas.width còn Yenemy = (0, canvas.height)
             y = Math.random() * canvas.height
         } else {
             x = Math.random() * canvas.width
-            y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius
+            y = Math.random() < 0.5 ? 0 - radius : canvas.height + radius // nếu kq trả về của Math.random() < 0.5 thì Yenemy = - radius, nếu > 0.5 thì Yenemy = canvas.height còn Xenemy = (0, canvas.width)
         }
         
         const color = 'green'
         const angle = Math.atan2(canvas.height / 2 - y, canvas.width / 2 - x)
-        const velocity = {
+        const ratio = {
             x: Math.cos(angle),
             y: Math.sin(angle)
         }
-        enemies.push(new Enemy(x, y, radius, color, velocity))
+        const initV = 1
+        enemies.push(new Enemy(x, y, radius, color, ratio, initV))
     }, 1000)
 }
 
 function animate() {
     let animationId = requestAnimationFrame(animate)
     // console.log(animationId, "animationId")
-    c.clearRect(0, 0, canvas.width, canvas.height)
+    c.fillStyle = 'rgba(0, 0, 0, 0.1)'
+    c.fillRect(0, 0, canvas.width, canvas.height)
     player.draw()
+    // xóa các bullet khi chúng chuyển động ra ngoài màn hình
     bullets.forEach((bullet, bulletIndex) => {
         bullet.update()
         if (bullet._x - bullet._radius < 0 || bullet._x - bullet._radius > canvas.width || bullet._y - bullet._radius < 0 || bullet._y - bullet._radius > canvas.height) {
@@ -73,12 +76,12 @@ function animate() {
 
 window.addEventListener('click', (e) => {
     // console.log(e)
-    const angle = Math.atan2(e.clientY -  canvas.height / 2, e.clientX - canvas.width / 2)
-    const velocity = {
+    const angle = Math.atan2(e.clientY -  canvas.height / 2, e.clientX - canvas.width / 2) // hàm atan2() trả về kết quả là góc tạo ra giữa 2 cạnh góc vuông của 1 tam giác vuông
+    const ratio = {
         x: Math.cos(angle),
         y: Math.sin(angle)
     }
-    bullets.push(new Bullet(canvas.width / 2, canvas.height / 2, 5, 'red', velocity))
+    bullets.push(new Bullet(canvas.width / 2, canvas.height / 2, 5, 'red', ratio, 3))
 })
 
 animate()

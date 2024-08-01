@@ -1,10 +1,11 @@
 class Bullet {
-    constructor(x, y, radius, color, velocity) {
+    constructor(x, y, radius, color, ratio, initV) {
         this._x = x
         this._y = y
         this._radius = radius
         this._color = color
-        this._velocity = velocity
+        this._ratio = ratio
+        this._initV = initV
     }
 
     draw() {
@@ -16,8 +17,8 @@ class Bullet {
 
     update() {
         this.draw()
-        this._x = this._x + this._velocity.x // _velocity là 1 obj gồm 2 thuộc tính x (tỷ lệ vận tốc theo phương x so với vận tốc tổng) và y (tỷ lệ vận tốc theo phương y so với vận tốc tổng)
-        this._y = this._y + this._velocity.y
+        this._x = this._x + this._ratio.x * this._initV // _ratio là 1 obj gồm 2 thuộc tính x (tỷ lệ vận tốc theo phương x so với vận tốc tổng) và y (tỷ lệ vận tốc theo phương y so với vận tốc tổng)
+        this._y = this._y + this._ratio.y * this._initV
     }
      
 }
