@@ -31,22 +31,47 @@ function spawnEnemies() {
 }
 
 function animate() {
-    requestAnimationFrame(animate)
+    let animationId = requestAnimationFrame(animate)
+    // console.log(animationId, "animationId")
     c.clearRect(0, 0, canvas.width, canvas.height)
     player.draw()
-    bullets.forEach((bullet) => {
+    bullets.forEach((bullet, bulletIndex) => {
         bullet.update()
+        if (bullet._x - bullet._radius < 0 || bullet._x - bullet._radius > canvas.width || bullet._y - bullet._radius < 0 || bullet._y - bullet._radius > canvas.height) {
+            setTimeout(() => {
+                bullets.splice(bulletIndex, 1)
+            }, 0)
+        }
     }) 
-    enemies.forEach((enemy) => {
+    enemies.forEach((enemy, enemyIndex) => {
         enemy.update()
-        // bullets.forEach((bullet) => {
-        //     Math.hypot()
-        // })
+        // if (enemy._x - enemy._radius < 0 || enemy._x - enemy._radius > canvas.width || enemy._y - enemy._radius < 0 || enemy._y - enemy._radius > canvas.height) {
+        //     setTimeout(() => {
+        //         enemies.splice(enemyIndex, 1)
+        //     }, 0)
+        // }
+        let distEtoP = Math.hypot(player._x - enemy._x, player._y - enemy._y) // tính độ dài vec tơ có tọa độ là (player._x - enemy._x, player._y - enemy._y)
+        if (distEtoP - enemy._radius - player._radius < 1) {
+            cancelAnimationFrame(animationId)
+        }
+        bullets.forEach((bullet, bulletIndex) => { // kiểm tra khoảng cách giữa từng viên đạn với enemy đang xét trong forEach()
+            let dist = Math.hypot(bullet._x - enemy._x, bullet._y - enemy._y)
+            if (dist - enemy._radius - bullet._radius < 1) {
+                setTimeout(() => {
+                    enemies.splice(enemyIndex, 1)
+                    bullets.splice(bulletIndex, 1)
+                }, 0)
+
+            }
+        })
     })
+
+    console.log(enemies, "enemies")
+    console.log(bullets, "bullets")
 
 }
 
-window.addEventListener('mousemove', (e) => {
+window.addEventListener('click', (e) => {
     // console.log(e)
     const angle = Math.atan2(e.clientY -  canvas.height / 2, e.clientX - canvas.width / 2)
     const velocity = {
