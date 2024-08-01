@@ -69,8 +69,8 @@ function animate() {
         })
     })
 
-    console.log(enemies, "enemies")
-    console.log(bullets, "bullets")
+    // console.log(enemies, "enemies")
+    // console.log(bullets, "bullets")
 
 }
 
